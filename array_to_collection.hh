@@ -1,6 +1,9 @@
 <?hh
 
-// Include the required functions
+/**
+ * Needed Libraries
+ */
+require_once('array_is_associative.hh');
 require_once('array_to_map.hh');
 require_once('array_to_vector.hh');
 
