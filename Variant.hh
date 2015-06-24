@@ -527,6 +527,11 @@ class Variant
 	 */
 	public function convert(Type $typeTarget) : mixed
 	{
+		// Check the type
+		if ($this->getType() === $typeTarget) {
+			// Return the data
+			return $this->mData;
+		}
 		// Check to see if we can convert
 		if ($this->can($typeTarget)) {
 			// Determine the source type
