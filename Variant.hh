@@ -510,6 +510,7 @@ class Variant
 	 */
 	public function can(Type $typeTarget) : bool
 	{
+		ddd($this->getType(), $typeTarget, $this->mConversionMap->get($this->getType())->linearSearch($typeTarget));
 		// Check the type
 		if ($this->mConversionMap->get($this->getType())->linearSearch($typeTarget) !== -1) {
 			// A conversion is possible
@@ -775,7 +776,7 @@ class Variant
 		/* } elseif (is_callable($this->mData)) {
 			// Return the actual type
 			return Type::VCallable; */
-		} elseif (@json_decode($this->mData) !== null) {
+		} elseif (is_object(json_decode($this->mData))) {
 			// Return the actual type
 			return Type::VJson;
 		} else {
