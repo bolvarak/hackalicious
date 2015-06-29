@@ -913,4 +913,16 @@ class Variant
 			return $strType;
 		}
 	}
+
+	/**
+	 * This method is for VariantMap and VariantList
+	 * @access public
+	 * @name Variant::getVariantData()
+	 * @return VariantList|VariantMap Variant::$mData
+	 */
+	public function getVariantData() : Variant
+	{
+		// Return the data as-is
+		return $this->mData;
+	}
 }
