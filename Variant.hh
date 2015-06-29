@@ -510,7 +510,6 @@ class Variant
 	 */
 	public function can(Type $typeTarget) : bool
 	{
-		ddd($this->getType(), $typeTarget, $this->mConversionMap->get($this->getType())->linearSearch($typeTarget));
 		// Check the type
 		if ($this->mConversionMap->get($this->getType())->linearSearch($typeTarget) !== -1) {
 			// A conversion is possible
@@ -684,6 +683,59 @@ class Variant
 	}
 
 	/**
+	 * This method converts the data to an escaped MySQL compliant string
+	 * @access public
+	 * @name Variant::toMySqlString()
+	 * @return string
+	 */
+	public function toMySqlString() : string
+	{
+		// Grab the string
+		$strData = $this->convert(Type::VString);
+		// Check for null
+		if (is_null($strData)) {
+			// Return a plain null
+			return 'NULL';
+		}
+		// Return the quoted string
+		return "'".addslashes($strData)."'";
+	}
+
+	/**
+	 * This method converts the data to a quoted MySQL compliant string list
+	 * @access public
+ 	 * @name Variant::toMySqlStringList()
+	 * @param string $strDelimiter [,]
+	 * @return string
+	 */
+	public function toMySqlStringList(string $strDelimiter = ',') : string
+	{
+		// Check for an array
+		if (is_array($this->mData) {
+			// Create the vector
+			$vecData = new Vector($this->mData);
+		} else {
+			// Create the vector
+			$vecData = $this->mData;
+		}
+		// Check the type
+		if ($vecData instanceof HH\Vector) {
+			// Create a temporary vector
+			$vecTemp = Vector {};
+			// Iterate over the data
+			foreach ($vecData->getIterator() as $mixData) {
+				// Set the data into the temporary vector
+				$vecTemp
+					->add(Variant::Factory($mixData)->toMySqlString());
+			}
+			// Return the string list
+			return implode($strDelimiter, $vecTemp->toArray());
+		}
+		// Return a MySQL null
+		return 'NULL';
+	}
+
+	/**
 	 * This method converts the data to a null type
 	 * @access public
 	 * @name Variant::toNull()
@@ -744,6 +796,32 @@ class Variant
 	}
 
 	/**
+	 * This method converts a vector or array to a string list
+	 * @access public
+	 * @name Variant::toStringList()
+	 * @param string $strDelimiter [,]
+	 * @return string
+	 */
+	public function toStringList(string $strDelimiter = ',') : string
+	{
+		// Check for an array
+		if (is_array($this->mData)) {
+			// Set the data
+			$vecData = new Vector($this->mData);
+		} else {
+			// Set the data
+			$vecData = $this->mData;
+		}
+		// Check the type
+		if ($vecData instanceof HH\Vector) {
+			// Return the string list
+			return implode($strDelimiter, $vecData->toArray());
+		}
+		// Return an empty string
+		return '';
+	}
+
+	/**
 	 * This method converts the data to a vector
 	 * @access public
 	 * @name Variant::toVector()
@@ -765,7 +843,7 @@ class Variant
 	 * @name Variant::getType()
 	 * @return Type
 	 */
-	public function getType() : Type
+	public function getType() : ?Type
 	{
 		// Get the type
 		$strType = gettype($this->mData);
