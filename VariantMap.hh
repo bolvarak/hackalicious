@@ -27,7 +27,7 @@ class VariantMap extends Variant
 	 * @param KeyedTraversable<Tk, Tv> $ktsSource [null]
 	 * @return void
 	 */
-	public function __construct(?KeyedTraversable<Tk, Tv> $ktsSource = null) : void
+	public function __construct(?KeyedTraversable<Tk, Tv> $ktsSource = null) : Variant
 	{
 		// Check for data
 		if (is_null($ktsSource) === false) {
@@ -46,7 +46,7 @@ class VariantMap extends Variant
 					|| ($mixValue instanceof Vector)) {
 					// Reset the data
 					$mapData
-						->set($strKey, VariantVector::Factory($mixData));
+						->set($strKey, VariantList::Factory($mixData));
 				} else {
 					// Reset the data
 					$mapData
@@ -304,7 +304,7 @@ class VariantMap extends Variant
 			|| ($mixValue instanceof Vector)) {
 			// Set the data into the instance
 			$this->mData
-			 	->set($strKey VariantVector::Factory($mixData));
+			 	->set($strKey, VariantVector::Factory($mixData));
 		} else {
 			// Set the data into the instance
 			$this->mData
@@ -331,7 +331,7 @@ class VariantMap extends Variant
 		// Iterate over the data
 		foreach ($this->mData->getIterator() as $strKey => $varValue) {
 			// Add the key to the response array
-			$arrData[$strKey] => $varValue->getData();
+			$arrData[$strKey] = $varValue->getData();
 		}
 		// We're done
 		return $arrData;
