@@ -142,12 +142,24 @@ class Variant
 	 * @access public
 	 * @name Variant::Variant()
 	 * @param mixed $mixData [null]
-	 * @return void
+	 * @return Variant
 	 */
-	public function __construct(mixed $mixData = null) : void
+	public function __construct(mixed $mixData = null) : Variant
 	{
+		// Check for an associative array or map
+		if ((is_array($mixData) && boolval(count(array_filter(array_keys($mixData))))) || ($mixData instanceof Map)) {
+			// Return a new VariantMap
+			return new VariantMap($mixData);
+		}
+		// Check for a sequential array or vector
+		if ((is_array($mixData) && (boolval(count(array_filter(array_keys($mixData)))) === false)) || ($mixData instanceof Map)) {
+			// Return a new VariantList
+			return new VariantList($mixData);
+		}
 		// Set the data into the instance
 		$this->mData = $mixData;
+		// Return the instance
+		return $this;
 	}
 
 	//////////////////////////////////////////////////////////////////////////////
@@ -711,7 +723,7 @@ class Variant
 	public function toMySqlStringList(string $strDelimiter = ',') : string
 	{
 		// Check for an array
-		if (is_array($this->mData) {
+		if (is_array($this->mData)) {
 			// Create the vector
 			$vecData = new Vector($this->mData);
 		} else {
@@ -841,9 +853,40 @@ class Variant
 		return $this->convert(Type::VVector);
 	}
 
+	/**
+	 * This method explodes a string into a vector of strings
+	 * @access public
+	 * @name Variant::toVectorList()
+	 * @param string $strDelimiter [,]
+	 * @param int $intLimit [null]
+	 * @return HH\Vector<string>
+	 */
+	public function toVectorList(string $strDelimiter = ',', ?int $intLimit = null) : Vector<string>
+	{
+		// Make sure we have a string
+		if (is_string($this->mData)) {
+			// Return the exploded vector
+			return new Vector(explode($strDelimiter, $this->mData, $intLimit));
+		}
+		// Return an empty vector
+		return Vector {};
+	}
+
 	//////////////////////////////////////////////////////////////////////////////
 	/// Getters /////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////
+
+	/**
+	 * This method returns the original data as it was constructed into this class
+	 * @access public
+	 * @name Variant::getData()
+	 * @return mixed Variant::$mData
+	 */
+	public function getData() : mixed
+	{
+		// Return the original data
+		return $this->mData;
+	}
 
 	/**
 	 * This method returns the actual type of the data
