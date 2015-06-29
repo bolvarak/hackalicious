@@ -814,8 +814,16 @@ class Variant
 		}
 		// Check the type
 		if ($vecData instanceof HH\Vector) {
+			// Create a temporary vector
+			$vecTemp = Vector {};
+			// Iterate over the data
+			foreach ($vecData->getIterator() as $mixData) {
+				// Set the string into the vector
+				$vecTemp
+					->add(Variant::Factory($mixData)->toString());
+			}
 			// Return the string list
-			return implode($strDelimiter, $vecData->toArray());
+			return implode($strDelimiter, $vecTemp->toArray());
 		}
 		// Return an empty string
 		return '';
