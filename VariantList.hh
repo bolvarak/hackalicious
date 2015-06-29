@@ -534,16 +534,4 @@ class VariantList extends Variant
 		// Return the data
 		return $vecData;
 	}
-
-	/**
-	 * This method returns the data as is
-	 * @access public
-	 * @name VariantList::getVariantData()
-	 * @return HH\Vector<Variant>
-	 */
-	public function getVariantData() : Vector<Variant>
-	{
-		// Return the data
-		return $this->mData;
-	}
 }
