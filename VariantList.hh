@@ -109,27 +109,9 @@ class VariantList extends Variant
 	 */
 	public function add(mixed $mixValue) : VariantList
 	{
-		// Check the type
-		if ((is_array($mixValue) && boolval(count(array_filter(array_keys($mixValue), 'is_string'))))
-			|| is_object($mixValue)
-			|| ($mixValue instanceof HH\Map)) {
-			// Set the data into the instance
-			$this->mData
-				->add(VariantMap::Factory($mixValue));
-		} elseif (is_array($mixValue)
-			|| ($mixValue instanceof HH\Vector)) {
-			// Set the data into the instance
-			$this->mData
-			 	->add(VariantList::Factory($mixValue));
-		} elseif ($mixValue instanceof Variant) {
-			// Set the data into the instance
-			$this->mData
-				->add($mixValue);
-		} else {
-			// Set the data into the instance
-			$this->mData
-			 	->add(Variant::Factory($mixValue));
-		}
+		// Set the data into the instance
+		$this->mData
+			->add(Variant::Factory($mixValue));
 		// We're done
 		return $this;
 	}
@@ -437,27 +419,9 @@ class VariantList extends Variant
 	 */
 	public function set(int $intKey, mixed $mixValue) : VariantList
 	{
-		// Check the type
-		if ((is_array($mixValue) && boolval(count(array_filter(array_keys($mixValue), 'is_string'))))
-			|| is_object($mixValue)
-			|| ($mixValue instanceof HH\Map)) {
-			// Set the data into the instance
-			$this->mData
-				->set($intKey, VariantMap::Factory($mixValue));
-		} elseif (is_array($mixValue)
-			|| ($mixValue instanceof HH\Vector)) {
-			// Set the data into the instance
-			$this->mData
-			 	->set($intKey, VariantList::Factory($mixValue));
-		} elseif ($mixValue instanceof Variant) {
-			// Set the data into the instance
-			$this->mData
-				->set($intKey, $mixValue);
-		} else {
-			// Set the data into the instance
-			$this->mData
-			 	->set($intKey, Variant::Factory($mixValue));
-		}
+		// Set the data into the instance
+		$this->mData
+			->set($intKey, Variant::Factory($mixValue));
 		// We're done
 		return $this;
 	}
