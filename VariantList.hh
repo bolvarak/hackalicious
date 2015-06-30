@@ -32,7 +32,7 @@ class VariantList extends Variant
 		// Check for data
 		if (is_null($ktsSource) === false) {
 			// Create a new map out of the
-			$vectData = new Vector($ktsSource);
+			$vecData = new Vector($ktsSource);
 			// Iterate over the map
 			foreach ($vecData->getIterator() as $mixValue) {
 				// Check the type
@@ -55,7 +55,12 @@ class VariantList extends Variant
 			}
 			// Set the data into the instance
 			$this->mData = $vecData;
+		} else {
+			// Create an empty vector
+			$this->mData = Vector {};
 		}
+		// We're done
+		return $this;
 	}
 
 	//////////////////////////////////////////////////////////////////////////////
@@ -237,6 +242,46 @@ class VariantList extends Variant
 	{
 		// Return the iterator
 		return $this->mData->getIterator();
+	}
+
+	/**
+	 * This method groups a VariantList<VariantMap> into a VariantMap<string, VariantList>> indexed by $strMapKey
+	 * @access public
+	 * @name VariantList::groupedVariantMap()
+	 * @param string $strMapKey
+	 * @return VariantMap
+	 */
+	public function groupedVariantMap(string $strMapKey) : VariantMap
+	{
+		// Create a response map
+		$mapReturn = new VariantMap();
+		// Iterate over the vector
+		foreach ($this->mData->getIterator() as $intIndex => $varValue) {
+			// Check for the key in the grid
+			if ($varValue->get($strMapKey)->isEmpty() === false) {
+				// Check for a key in the map
+				if ($mapReturn->contains($varValue->get($strMapKey)) === false) {
+					// Create the key
+					$mapReturn->set($varValue->get($strMapKey)->toString(), new VariantList());
+				}
+				// Set the value
+				$mapReturn->get($varValue->get($strMapKey)->toString())->add($varValue->getData());
+			}
+		}
+		// Return the response map
+		return $mapReturn;
+	}
+
+	/**
+	 * This method returns whether or not the data is empty
+	 * @access public
+	 * @name VariantList::isEmpty()
+	 * @return bool
+	 */
+	public function isEmpty() : bool
+	{
+		// Return the empty status
+		return $this->mData->isEmpty();
 	}
 
 	/**
