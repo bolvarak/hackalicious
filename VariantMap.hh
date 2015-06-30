@@ -32,29 +32,12 @@ class VariantMap extends Variant
 		// Check for data
 		if (is_null($ktsSource) === false) {
 			// Create a new map out of the
-			$mapData = new Map($ktsSource);
+			$this->mData = new Map($ktsSource);
 			// Iterate over the map
-			foreach ($mapData->getIterator() as $strKey => $mixValue) {
-				// Check the type
-				if ((is_array($mixValue) && boolval(count(array_filter(array_keys($mixValue), 'is_string'))))
-					|| is_object($mixValue)
-					|| ($mixValue instanceof Map)) {
-					// Reset the data
-					$mapData
-						->set($strKey, VariantMap::Factory($mixValue));
-				} elseif (is_array($mixValue)
-					|| ($mixValue instanceof Vector)) {
-					// Reset the data
-					$mapData
-						->set($strKey, VariantList::Factory($mixData));
-				} else {
-					// Reset the data
-					$mapData
-						->set($strKey, Variant::Factory($mixValue));
-				}
+			foreach ($this->mData->getIterator() as $strKey => $mixValue) {
+				// Reset the data
+				$this->set($strKey, $mixValue);
 			}
-			// Set the data into the instance
-			$this->mData = $mapData;
 		} else {
 			// Create an empty map
 			$this->mData = Map {};
@@ -309,7 +292,7 @@ class VariantMap extends Variant
 			|| ($mixValue instanceof Vector)) {
 			// Set the data into the instance
 			$this->mData
-			 	->set($strKey, VariantVector::Factory($mixData));
+			 	->set($strKey, VariantList::Factory($mixData));
 		} else {
 			// Set the data into the instance
 			$this->mData
