@@ -32,29 +32,12 @@ class VariantList extends Variant
 		// Check for data
 		if (is_null($ktsSource) === false) {
 			// Create a new map out of the
-			$vecData = new Vector($ktsSource);
+			$this->mData = new Vector($ktsSource);
 			// Iterate over the map
-			foreach ($vecData->getIterator() as $mixValue) {
-				// Check the type
-				if ((is_array($mixValue) && boolval(count(array_filter(array_keys($mixValue), 'is_string'))))
-					|| is_object($mixValue)
-					|| ($mixValue instanceof Map)) {
-					// Reset the data
-					$vecData
-						->add(VariantMap::Factory($mixValue));
-				} elseif (is_array($mixValue)
-					|| ($mixValue instanceof Vector)) {
-					// Reset the data
-					$vecData
-						->add(VariantList::Factory($mixData));
-				} else {
-					// Reset the data
-					$vecData
-						->add(Variant::Factory($mixValue));
-				}
+			foreach ($this->mData->getIterator() as $intIndex => $mixValue) {
+				// Reset the data
+				$this->set($intIndex, $mixValue);
 			}
-			// Set the data into the instance
-			$this->mData = $vecData;
 		} else {
 			// Create an empty vector
 			$this->mData = Vector {};
@@ -129,15 +112,15 @@ class VariantList extends Variant
 		// Check the type
 		if ((is_array($mixValue) && boolval(count(array_filter(array_keys($mixValue), 'is_string'))))
 			|| is_object($mixValue)
-			|| ($mixValue instanceof Map)) {
+			|| ($mixValue instanceof HH\Map)) {
 			// Set the data into the instance
 			$this->mData
-				->add(VariantList::Factory($mixValue));
+				->add(VariantMap::Factory($mixValue));
 		} elseif (is_array($mixValue)
-			|| ($mixValue instanceof Vector)) {
+			|| ($mixValue instanceof HH\Vector)) {
 			// Set the data into the instance
 			$this->mData
-			 	->add(VariantVector::Factory($mixData));
+			 	->add(VariantList::Factory($mixData));
 		} else {
 			// Set the data into the instance
 			$this->mData
@@ -402,15 +385,15 @@ class VariantList extends Variant
 		// Check the type
 		if ((is_array($mixValue) && boolval(count(array_filter(array_keys($mixValue), 'is_string'))))
 			|| is_object($mixValue)
-			|| ($mixValue instanceof Map)) {
+			|| ($mixValue instanceof HH\Map)) {
 			// Set the data into the instance
 			$this->mData
-				->set($intKey, VariantList::Factory($mixValue));
+				->set($intKey, VariantMap::Factory($mixValue));
 		} elseif (is_array($mixValue)
-			|| ($mixValue instanceof Vector)) {
+			|| ($mixValue instanceof HH\Vector)) {
 			// Set the data into the instance
 			$this->mData
-			 	->set($intKey, VariantVector::Factory($mixData));
+			 	->set($intKey, VariantList::Factory($mixData));
 		} else {
 			// Set the data into the instance
 			$this->mData
@@ -573,7 +556,7 @@ class VariantList extends Variant
 		// Iterate over the data map
 		foreach ($this->mData->getIterator() as $varValue) {
 			// Reset the data into the new map
-			$mapData
+			$vecData
 				->add($varValue->getData());
 		}
 		// Return the data
