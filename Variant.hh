@@ -142,29 +142,12 @@ class Variant
 	 * @access public
 	 * @name Variant::Variant()
 	 * @param mixed $mixData [null]
-	 * @return Variant
+	 * @return void
 	 */
-	public function __construct(mixed $mixData = null) : Variant
+	public function __construct(mixed $mixData = null) : void
 	{
-		// Make sure we have a scalar
-		if (is_scalar($mixData) || ($mixData === null)) {
-			// Set the data into the instance
-			$this->mData = $mixData;
-		} elseif ((is_array($mixData) && boolval(count(array_filter(array_keys($mixData), 'is_string'))))
-			|| is_object($mixData)
-			|| ($mixData instanceof HH\Map)) {
-			// Return a new instance of VariantMap
-			return VariantMap::Factory($mixData);
-		} elseif (is_array($mixData)
-			|| ($mixData instanceof HH\Vector)) {
-			// Return a new instance of VariantList
-			return VariantList::Factory($mixData);
-		} else {
-			// Throw an exception
-			throw new Exception('Unable to convert data to Variant, VariantList or VariantMap.');
-		}
-		// Return the instance
-		return $this;
+		// Set the data into the instance
+		$this->mData = $mixData;
 	}
 
 	//////////////////////////////////////////////////////////////////////////////
@@ -181,8 +164,26 @@ class Variant
 	 */
 	public static function Factory(mixed $mixData = null) : Variant
 	{
-		// Return the instance
-		return new self($mixData);
+		// Make sure we have a scalar
+		if (is_scalar($mixData) || ($mixData === null)) {
+			// We're done
+			return new self($mixData);
+		} elseif ((is_array($mixData) && boolval(count(array_filter(array_keys($mixData), 'is_string'))))
+			|| is_object($mixData)
+			|| ($mixData instanceof HH\Map)) {
+			// Return a new instance of VariantMap
+			return VariantMap::Factory($mixData);
+		} elseif (is_array($mixData)
+			|| ($mixData instanceof HH\Vector)) {
+			// Return a new instance of VariantList
+			return VariantList::Factory($mixData);
+		} elseif ($mixData instanceof Variant) {
+			// Re-run this Constructor
+			return new self($mixData->getData());
+		} else {
+			// Throw an exception
+			throw new Exception('Unable to convert data to Variant, VariantList or VariantMap.');
+		}
 	}
 
 	//////////////////////////////////////////////////////////////////////////////
