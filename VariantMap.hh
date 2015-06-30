@@ -61,7 +61,7 @@ class VariantMap extends Variant
 	public static function Factory(mixed $tvsSource) : VariantMap
 	{
 		// Check the type
-		if (is_object($tvsSource) && !($tvsSource instanceof Map)) {
+		if (!($tvsSource instanceof HH\Map) && is_object($tvsSource)) {
 			// Return the new instance
 			return self::fromObject($tvsSource);
 		}
@@ -281,27 +281,9 @@ class VariantMap extends Variant
 	 */
 	public function set(string $strKey, mixed $mixValue) : VariantMap
 	{
-		// Check the type
-		if ((is_array($mixValue) && boolval(count(array_filter(array_keys($mixValue), 'is_string'))))
-			|| is_object($mixValue)
-			|| ($mixValue instanceof Map)) {
-			// Set the data into the instance
-			$this->mData
-				->set($strKey, VariantMap::Factory($mixValue));
-		} elseif (is_array($mixValue)
-			|| ($mixValue instanceof Vector)) {
-			// Set the data into the instance
-			$this->mData
-			 	->set($strKey, VariantList::Factory($mixValue));
-		} elseif ($mixValue instanceof Variant) {
-			// Set the data into the instance
-			$this->mData
-				->set($strKey, $mixValue);
-		} else {
-			// Set the data into the instance
-			$this->mData
-			 	->set($strKey, Variant::Factory($mixValue));
-		}
+		// Set the data into the instance
+		$this->mData
+			->set($strKey, Variant::Factory($mixValue));
 		// We're done
 		return $this;
 	}
