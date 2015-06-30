@@ -14,7 +14,7 @@ class VariantList extends Variant
 	 * @name VariantList::$mData
 	 * @var HH\Vector<Variant>
 	 */
-	protected Vector<Variant> $mData = Map {};
+	protected Vector<Variant> $mData = Vector {};
 
 	//////////////////////////////////////////////////////////////////////////////
 	/// Constructor /////////////////////////////////////////////////////////////
