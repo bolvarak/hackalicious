@@ -120,7 +120,11 @@ class VariantList extends Variant
 			|| ($mixValue instanceof HH\Vector)) {
 			// Set the data into the instance
 			$this->mData
-			 	->add(VariantList::Factory($mixData));
+			 	->add(VariantList::Factory($mixValue));
+		} elseif ($mixValue instanceof Variant) {
+			// Set the data into the instance
+			$this->mData
+				->add($mixValue);
 		} else {
 			// Set the data into the instance
 			$this->mData
@@ -253,6 +257,57 @@ class VariantList extends Variant
 		}
 		// Return the response map
 		return $mapReturn;
+	}
+
+	/**
+	 * This method implodes the vector into a string list
+	 * @access public
+ 	 * @name VariantList::implode()
+	 * @param string $strDelimiter [,]
+	 * @param bool $blnForMySQL [false]
+	 * @return string
+	 */
+	public function implode(string $strDelimiter = ',', bool $blnForMySQL = false) : string
+	{
+		// Create a temporary vector
+		$vecTemp = Vector {};
+		// Iterate over the data
+		foreach ($this->getIterator() as $intIndex => $varValue) {
+			// Check the flag
+			if ($blnForMySQL) {
+				// Set the data
+				$vecTemp
+					->add($varValue->toMySqlString());
+			} else {
+				// Set the data
+				$vecTemp
+					->add($varValue->toString());
+			}
+		}
+		// Return the imploded vector
+		return implode($strDelimiter, $vecTemp->toArray());
+	}
+
+	/**
+	 * This method implodes the vector with a callback just before data reset
+	 * @access public
+	 * @name VariantList::implodeCallback()
+	 * @param string $strDelimiter [,]
+	 * @param callable $fnCallback
+	 * @return string
+	 */
+	public function implodeCallback(string $strDelimiter = ',', callable $fnCallback) : string
+	{
+		// Localize the data
+		$vecTemp = Vector {};
+		// Iterate over the data
+		foreach ($this->getIterator() as $intIndex => $varValue) {
+			// Reset the data after executing the callback
+			$vecTemp
+				->add($vnCallback($varValue));
+		}
+		// Return the imploded vector
+		return implode($strDelimiter, $vecTemp->toArray());
 	}
 
 	/**
@@ -393,7 +448,11 @@ class VariantList extends Variant
 			|| ($mixValue instanceof HH\Vector)) {
 			// Set the data into the instance
 			$this->mData
-			 	->set($intKey, VariantList::Factory($mixData));
+			 	->set($intKey, VariantList::Factory($mixValue));
+		} elseif ($mixValue instanceof Variant) {
+			// Set the data into the instance
+			$this->mData
+				->set($intKey, $mixValue);
 		} else {
 			// Set the data into the instance
 			$this->mData
