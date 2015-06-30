@@ -292,7 +292,11 @@ class VariantMap extends Variant
 			|| ($mixValue instanceof Vector)) {
 			// Set the data into the instance
 			$this->mData
-			 	->set($strKey, VariantList::Factory($mixData));
+			 	->set($strKey, VariantList::Factory($mixValue));
+		} elseif ($mixValue instanceof Variant) {
+			// Set the data into the instance
+			$this->mData
+				->set($strKey, $mixValue);
 		} else {
 			// Set the data into the instance
 			$this->mData
