@@ -262,9 +262,9 @@ class VariantMap extends Variant
 		// Iterate over the keys
 		foreach ($this->toKeysArray() as $strRealKey) {
 			// Check the key
-			if (strtolower($strKey) === strtolower($strRealKey)) {
+			if (strtolower($strKey) == strtolower($strRealKey)) {
 				// We're done
-				return $strKey;
+				return $strRealKey;
 			}
 		}
 		// We're done, no key
