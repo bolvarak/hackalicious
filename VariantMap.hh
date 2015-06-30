@@ -55,7 +55,12 @@ class VariantMap extends Variant
 			}
 			// Set the data into the instance
 			$this->mData = $mapData;
+		} else {
+			// Create an empty map
+			$this->mData = Map {};
 		}
+		// We're done
+		return $this;
 	}
 
 	//////////////////////////////////////////////////////////////////////////////
@@ -73,9 +78,9 @@ class VariantMap extends Variant
 	public static function Factory(mixed $tvsSource) : VariantMap
 	{
 		// Check the type
-		if (is_object($tvsSource)) {
+		if (is_object($tvsSource) && !($tvsSource instanceof Map)) {
 			// Return the new instance
-			return self::fromObject($objSource);
+			return self::fromObject($tvsSource);
 		}
 		// Return the new instance
 		return new self($tvsSource);
