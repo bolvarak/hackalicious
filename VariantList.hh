@@ -242,6 +242,30 @@ class VariantList extends Variant
 	}
 
 	/**
+	 * This method checks the vector data for duplicates
+	 * @access public
+	 * @name VariantList::hasDuplicates()
+	 * @return bool
+	 */
+	public function hasDuplicates() : bool
+	{
+		// Create a temporary array
+		$arrTemp = [];
+		// Iterate over the data
+		foreach ($this->getIterator() as $varData) {
+			// Check for the data
+			if (in_array($varData->getData(), $arrTemp)) {
+				// We're done
+				return true;
+			}
+			// Add the data to the array
+			array_push($arrTemp, $varData->getData());
+		}
+		// We're done
+		return false;
+	}
+
+	/**
 	 * This method implodes the vector into a string list
 	 * @access public
  	 * @name VariantList::implode()
