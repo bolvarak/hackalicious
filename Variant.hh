@@ -558,10 +558,10 @@ class Variant
 			// Check for case sensitivity
 			if ($blnCaseSensitive) {
 				// Return the comparison
-				return ((strpos($this->convert(Type::VString),(string) $mixNeedle) !== false) ? true : false);
+				return ((strpos($this->convert(Type::VString), (string) $mixNeedle) !== false) ? true : false);
 			} else {
 				// Return the comparison
-				return ((stripos($this->convert(Type::VString),(string) $mixNeedle) !== false) ? true : false);
+				return ((stripos($this->convert(Type::VString), (string) $mixNeedle) !== false) ? true : false);
 			}
 		}
 		// No conversion possible, we're done
@@ -654,6 +654,58 @@ class Variant
 	{
 		// Return the comparison
 		return ($this->mData === $mixComparator);
+	}
+
+	/**
+	 * This method replaces targets in the data in the instance in place, this changes the instance data
+	 * @access public
+	 * @name Variant::replace()
+	 * @param string $mixTarget
+	 * @param string $mixReplacement
+	 * @param bool $blnCaseSensitive [false]
+	 * @return Variant $this
+	 */
+	public function replace(string $strTarget, string $strReplacement, bool $blnCaseSensitive = false) : Variant
+	{
+		// Make sure we can convert
+		if ($this->can(Type::VString)) {
+			// Check for case sensitivity
+			if ($blnCaseSensitive) {
+				// Reset the data
+				$this->mData = str_replace($strTarget, $strReplacement, $this->convert(Type::VString));
+			} else {
+				// Reset the data
+				$this->mData = str_ireplace($strTarget, $strReplacement, $this->convert(Type::VString));
+			}
+		}
+		// We're done
+		return $this;
+	}
+
+	/**
+	 * This method replaces targets in the data in the instance and returns it, this does not affect the instance data
+	 * @access public
+	 * @name Variant::replaceNonVolatile()
+	 * @param string $mixTarget
+	 * @param string $mixReplacement
+	 * @param bool $blnCaseSensitive [false]
+	 * @return Variant $this
+	 */
+	public function replaceNonVolatile(string $strTarget, string $strReplacement, bool $blnCaseSensitive = false) : string
+	{
+		// Make sure we can convert
+		if ($this->can(Type::VString)) {
+			// Check for case sensitivity
+			if ($blnCaseSensitive) {
+				// Reset the data
+				$strData = str_replace($strTarget, $strReplacement, $this->convert(Type::VString));
+			} else {
+				// Reset the data
+				$strData = str_ireplace($strTarget, $strReplacement, $this->convert(Type::VString));
+			}
+		}
+		// We're done
+		return $strData;
 	}
 
 	//////////////////////////////////////////////////////////////////////////////
