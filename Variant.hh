@@ -544,6 +544,31 @@ class Variant
 	}
 
 	/**
+	 * This method searches the scalar data for $mixNeedle, if the data cannot be converted to a string, then false is returned
+	 * @access public
+	 * @name Variant::contains()
+	 * @param scalar $mixNeedle
+	 * @param bool $blnCaseSensitive [false]
+	 * @return bool
+	 */
+	public function contains(mixed $mixNeedle, bool $blnCaseSensitive = false) : bool
+	{
+		// Check to see if this variant can convert to a string
+		if ($this->can(Type::VString)) {
+			// Check for case sensitivity
+			if ($blnCaseSensitive) {
+				// Return the comparison
+				return ((strpos($this->convert(Type::VString),(string) $mixNeedle) !== false) ? true : false);
+			} else {
+				// Return the comparison
+				return ((stripos($this->convert(Type::VString),(string) $mixNeedle) !== false) ? true : false);
+			}
+		}
+		// No conversion possible, we're done
+		return false;
+	}
+
+	/**
 	 * This method converts the data to a specified target type
 	 * @access public
 	 * @name Variant::convert()
@@ -616,6 +641,19 @@ class Variant
 		}
 		// Return the empty status
 		return is_null($this->mData);
+	}
+
+	/**
+	 * This method compares the raw data to a comparator to see if they match
+	 * @access public
+	 * @name Variant::matches()
+	 * @param mixed $mixComparator
+	 * @return bool
+	 */
+	public function matches(mixed $mixComparator) : bool
+	{
+		// Return the comparison
+		return ($this->mData === $mixComparator);
 	}
 
 	//////////////////////////////////////////////////////////////////////////////
@@ -851,6 +889,20 @@ class Variant
 		}
 		// Return an empty string
 		return '';
+	}
+
+	/**
+	 * This method explodes a string into a VariantList
+	 * @access public
+	 * @name Variant::toVariantList()
+	 * @param string $strDelimiter [,]
+	 * @param int $intLimit [null]
+	 * @return VariantList
+	 */
+	public function toVariantList(string $strDelimiter = ',', ?int $intLimit = null) : VariantList
+	{
+		// Return the variant list
+		return VariantList::Factory($this->toVectorList($strDelimiter, $intLimit));
 	}
 
 	/**
