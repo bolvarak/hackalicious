@@ -286,7 +286,7 @@ class VariantList extends Variant
 		foreach ($this->getIterator() as $intIndex => $varValue) {
 			// Reset the data after executing the callback
 			$vecTemp
-				->add($vnCallback($varValue));
+				->add(call_user_func_array($fnCallback, [$varValue]));
 		}
 		// Return the imploded vector
 		return implode($strDelimiter, $vecTemp->toArray());
@@ -476,6 +476,46 @@ class VariantList extends Variant
 	}
 
 	/**
+	 * This method converts the VariantList to a Vector of booleans
+	 * @access public
+	 * @name VariantList::toBoolList()
+	 * @return HH\Vector<bool>
+	 */
+	public function toBoolList() : Vector<bool>
+	{
+		// Create the temporary vector
+		$vecTemp = Vector {};
+		// Iterate over the current Vector
+		foreach ($this->getIterator() as $intIndex => $varItem) {
+			// Add the item to the temporary vector
+			$vecTemp
+				->add($varItem->toBool());
+		}
+		// Return the vector
+		return $vecTemp;
+	}
+
+	/**
+	 * This method converts the VariantList to a Vector of integers
+	 * @access public
+	 * @name VariantList::toIntList()
+	 * @return HH\Vector<int>
+	 */
+	public function toIntList() : Vector<int>
+	{
+		// Create the temporary vector
+		$vecTemp = Vector {};
+		// Iterate over the current Vector
+		foreach ($this->getIterator() as $varItem) {
+			// Add the item to the temporary vector
+			$vecTemp
+				->add($varItem->toInt());
+		}
+		// Return the vector
+		return $vecTemp;
+	}
+
+	/**
 	 * This method returns the Vector's keys as an array
 	 * @access public
 	 * @name VariantList::toKeysArray()
@@ -497,6 +537,42 @@ class VariantList extends Variant
 	{
 		// Return the keys vector
 		return new Vector($this->toKeysArray());
+	}
+
+	/**
+	 * This method converts the VariantList to a Vector of strings
+	 * @access public
+	 * @name VariantList::toStringList()
+	 * @return HH\Vector<string>
+	 */
+	public function toStringList() : Vector<string>
+	{
+		// Create the temporary vector
+		$vecTemp = Vector {};
+		// Iterate over the current Vector
+		foreach ($this->getIterator() as $varItem) {
+			// Add the item to the temporary vector
+			$vecTemp
+				->add($varItem->toString());
+		}
+		// Return the vector
+		return $vecTemp;
+	}
+
+	/**
+	 * This method convers a VariantList<HH\Map> to a VariantList<mixed> by combining the values in each map from key $strKey into a Vector<mixed>
+	 * @access public
+	 * @name VariantList::toTargetKeyList()
+	 * @param string $strKey
+	 * @return VariantList
+	 */
+	public function toTargetKeyList(string $strKey) : VariantList
+	{
+		// Return the vector
+		return self::Factory(explode(',', $this->implodeCallback(',', function(VariantMap $varMapData) use($strKey) {
+			// Return the target key
+			return $varMapData->get($strKey)->getData();
+		})));
 	}
 
 	/**
